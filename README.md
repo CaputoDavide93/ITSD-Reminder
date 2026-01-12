@@ -1,261 +1,198 @@
+<div align="center">
+
 # 🤖 ITSD Reminder Bot
 
-A Slack bot that automatically reminds users to select a category for their IT Service Desk tickets when they forget to do so.
+> **Automated Slack bot for IT Service Desk ticket category reminders**
 
-## � Project Structure
+A Slack bot that monitors your IT Service Desk channel and automatically reminds users to select a category for their tickets when they forget to do so.
 
-```
-ITSD-Reminder/
-├── src/                    # Application source code
-│   ├── __init__.py
-│   └── main.py             # Main bot logic
-├── config/                 # Configuration files
-│   ├── .env.example        # Template (safe to commit)
-│   └── .env                # Your secrets (git-ignored)
-├── data/                   # Runtime data (git-ignored)
-│   └── reminded_messages.json
-├── Dockerfile              # Multi-arch Docker image
-├── docker-compose.yml      # Docker orchestration
-├── requirements.txt        # Python dependencies
-└── README.md               # This file
-```
+![Python](https://img.shields.io/badge/python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Slack](https://img.shields.io/badge/Slack-integrated-4A154B?style=for-the-badge&logo=slack&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
 
-## �📋 Table of Contents
+---
 
-- [Features](#-features)
-- [Prerequisites](#-prerequisites)
-- [Quick Start](#-quick-start)
-- [Configuration](#-configuration)
-- [Docker Deployment](#-docker-deployment)
-- [Running Locally](#-running-locally)
-- [How It Works](#-how-it-works)
-- [Troubleshooting](#-troubleshooting)
-- [Contributing](#-contributing)
+[Features](#-features) •
+[Quick Start](#-quick-start) •
+[Configuration](#️-configuration) •
+[Contributing](#-contributing)
+
+</div>
+
+---
+
+## 📑 Table of Contents
+
+- [✨ Features](#-features)
+- [🚀 Quick Start](#-quick-start)
+- [📦 Prerequisites](#-prerequisites)
+- [⚙️ Configuration](#️-configuration)
+- [🐳 Docker Deployment](#-docker-deployment)
+- [💻 Running Locally](#-running-locally)
+- [🏗️ Architecture](#️-architecture)
+- [📁 Project Structure](#-project-structure)
+- [🔧 Troubleshooting](#-troubleshooting)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [👤 Author](#-author)
+
+---
 
 ## ✨ Features
 
-- 🔍 **Automatic Monitoring** - Continuously monitors your Slack channel for new tickets
-- ⏰ **Smart Timing** - Only reminds users after a configurable time threshold
-- 🤖 **HelpDesk Integration** - Detects when HelpDesk bot has already processed a ticket
-- 🔄 **Duplicate Prevention** - Tracks reminded messages to avoid spamming users
-- 🐳 **Docker Ready** - Fully containerized with multi-architecture support (Intel & Apple Silicon)
-- 🔒 **Secure** - Runs as non-root user, credentials via environment variables
+| Feature | Description |
+|---------|-------------|
+| 🔍 **Automatic Monitoring** | Continuously monitors your Slack channel for new tickets |
+| ⏰ **Smart Timing** | Only reminds users after a configurable time threshold |
+| 🤖 **HelpDesk Integration** | Detects when HelpDesk bot has already processed a ticket |
+| 🔄 **Duplicate Prevention** | Tracks reminded messages to avoid spamming users |
+| 🐳 **Docker Ready** | Fully containerized with multi-architecture support (Intel & Apple Silicon) |
+| 🔒 **Secure** | Runs as non-root user, credentials via environment variables |
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/CaputoDavide93/ITSD-Reminder.git
+cd ITSD-Reminder
+
+# Configure environment
+cp config/.env.example config/.env
+nano config/.env  # Add your Slack credentials
+
+# Run with Docker
+docker compose up -d
+```
+
+---
 
 ## 📦 Prerequisites
 
 ### For Docker Deployment (Recommended)
-- Docker 20.10 or later
-- Docker Compose v2.0 or later
+
+| Requirement | Version |
+|-------------|---------|
+| 🐳 Docker | 20.10+ |
+| 📦 Docker Compose | 2.0+ |
 
 ### For Local Development
-- Python 3.9 or later
-- pip (Python package manager)
 
-### Slack Bot Setup (Step-by-Step)
+| Requirement | Version |
+|-------------|---------|
+| 🐍 Python | 3.9+ |
+| 📦 pip | Latest |
 
-Follow these steps to create and configure your Slack bot:
+### Slack Bot Setup
+
+<details>
+<summary><strong>📋 Step-by-Step Guide</strong></summary>
 
 #### Step 1: Create a Slack App
-
 1. Go to [api.slack.com/apps](https://api.slack.com/apps)
-2. Click **"Create New App"**
-3. Choose **"From scratch"**
-4. Enter an App Name (e.g., "ITSD Reminder Bot")
-5. Select your workspace
-6. Click **"Create App"**
+2. Click "Create New App" → "From scratch"
+3. Enter an App Name (e.g., "ITSD Reminder Bot")
+4. Select your workspace and click "Create App"
 
 #### Step 2: Configure Bot Permissions
-
-1. In the left sidebar, click **"OAuth & Permissions"**
-2. Scroll down to **"Scopes"** → **"Bot Token Scopes"**
-3. Click **"Add an OAuth Scope"** and add these scopes:
+1. Navigate to "OAuth & Permissions"
+2. Add these **Bot Token Scopes**:
 
 | Scope | Purpose |
-| ----- | ------- |
+|-------|---------|
 | `channels:history` | Read messages from public channels |
 | `channels:read` | View basic channel info |
 | `chat:write` | Send reminder messages |
 | `users:read` | Get user information for mentions |
 
 #### Step 3: Install the App
-
-1. Scroll up to **"OAuth Tokens for Your Workspace"**
-2. Click **"Install to Workspace"**
-3. Review the permissions and click **"Allow"**
-4. Copy the **Bot User OAuth Token** (starts with `xoxb-`)
-   - This is your `SLACK_BOT_TOKEN`
+1. Click "Install to Workspace"
+2. Review permissions and click "Allow"
+3. Copy the **Bot User OAuth Token** (starts with `xoxb-`)
 
 #### Step 4: Invite Bot to Channel
+1. Open your IT Service Desk channel in Slack
+2. Type `/invite @YourBotName`
 
-1. Open Slack and go to your IT Service Desk channel
-2. Type `/invite @YourBotName` (use the name you gave your app)
-3. The bot is now in the channel and can read/send messages
+</details>
 
-#### Step 5: Get Required IDs
-
-**Channel ID:**
-1. Right-click on your channel name in Slack
-2. Select **"View channel details"**
-3. Scroll to the bottom - copy the **Channel ID** (starts with `C`)
-
-**HelpDesk Bot ID:**
-1. Find any message from your HelpDesk bot in the channel
-2. Click the three dots (⋮) on the message → **"Copy link"**
-3. The URL contains info, or use Slack's API to find the `bot_id` (starts with `B`)
-
-> **Tip:** You can also find the HelpDesk bot ID by making an API call:
-> ```bash
-> curl -H "Authorization: Bearer xoxb-your-token" \
->   "https://slack.com/api/conversations.history?channel=YOUR_CHANNEL_ID&limit=50" \
->   | grep -o '"bot_id":"[^"]*"' | head -1
-> ```
-
-## 🚀 Quick Start
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/CaputoDavide93/ITSD-Reminder.git
-cd ITSD-Reminder
-```
-
-### 2. Configure Environment
-
-```bash
-# Copy the example configuration
-cp config/.env.example config/.env
-
-# Edit with your values
-nano config/.env  # or use your preferred editor
-```
-
-### 3. Run with Docker
-
-```bash
-# Build and start the container
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-```
-
-That's it! The bot is now running. 🎉
+---
 
 ## ⚙️ Configuration
 
-All configuration is done through environment variables. Copy `.env.example` to `.env` and fill in your values:
+### Environment Variables
 
-### Required Variables
+| Variable | Required | Default | Description |
+|----------|:--------:|---------|-------------|
+| `SLACK_BOT_TOKEN` | ✅ | - | Your Slack Bot OAuth Token |
+| `CHANNEL_ID` | ✅ | - | The Slack channel ID to monitor |
+| `HELPDESK_BOT_ID` | ✅ | - | The HelpDesk bot's ID |
+| `AGE_THRESHOLD_SECONDS` | ❌ | `10800` | Time to wait before sending reminder (3 hours) |
+| `CHECK_INTERVAL_HOURS` | ❌ | `2` | How often to check for new messages |
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `SLACK_BOT_TOKEN` | Your Slack Bot OAuth Token | `xoxb-123-456-abc` |
-| `CHANNEL_ID` | The Slack channel ID to monitor | `C0310Q6B8S0` |
-| `HELPDESK_BOT_ID` | The HelpDesk bot's ID | `B03303BSU56` |
+### Example Configuration
 
-### Optional Variables
+```bash
+# config/.env
+SLACK_BOT_TOKEN=xoxb-your-token-here
+CHANNEL_ID=C0XXXXXXXXX
+HELPDESK_BOT_ID=B0XXXXXXXXX
+AGE_THRESHOLD_SECONDS=10800
+CHECK_INTERVAL_HOURS=2
+```
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `AGE_THRESHOLD_SECONDS` | Time to wait before sending reminder | `10800` (3 hours) |
-| `CHECK_INTERVAL_HOURS` | How often to check for new messages | `2` |
-| `REMINDER_MESSAGE` | Custom reminder message | See default in `.env.example` |
-| `REMINDER_LOG_FILE` | Path to store reminded message IDs | `/app/data/reminded_messages.json` |
+> ⚠️ **Security Note**: Never commit your `.env` file to version control!
 
-### Finding Your IDs
-
-**Channel ID:**
-1. Open Slack and right-click on the channel
-2. Select "View channel details"
-3. Scroll down to find the Channel ID (starts with `C`)
-
-**HelpDesk Bot ID:**
-1. Find a message from the HelpDesk bot
-2. Use Slack's API or inspect the message to find the `bot_id` (starts with `B`)
+---
 
 ## 🐳 Docker Deployment
 
 ### Multi-Architecture Support
 
-This image supports both **Intel/AMD64** and **Apple Silicon (M1/M2/M3) ARM64** processors.
+This image supports both Intel/AMD64 and Apple Silicon (ARM64).
 
 ### Build and Run
 
 ```bash
-# Standard build and run
-docker-compose up -d
-
-# Build for specific platform (if needed)
-docker build --platform linux/amd64 -t itsd-reminder:amd64 .
-docker build --platform linux/arm64 -t itsd-reminder:arm64 .
-
-# Build multi-arch image (requires Docker Buildx)
-docker buildx build --platform linux/amd64,linux/arm64 -t itsd-reminder:latest .
-```
-
-### Docker Commands
-
-```bash
-# View container status
-docker-compose ps
+# Build and start
+docker compose up -d
 
 # View logs
-docker-compose logs -f
-
-# Restart the service
-docker-compose restart
+docker compose logs -f
 
 # Stop the service
-docker-compose down
+docker compose down
 
 # Rebuild after code changes
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
-### Persistent Data
-
-The bot stores reminded message IDs in `/app/data/reminded_messages.json` inside the container. This is mounted to `./data/` on your host machine to persist across container restarts.
-
-```bash
-# Create data directory if it doesn't exist
-mkdir -p data
-```
+---
 
 ## 💻 Running Locally
 
-For development or testing without Docker:
-
-### 1. Create Virtual Environment
-
 ```bash
+# Create virtual environment
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-### 2. Install Dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### 3. Set Environment Variables
-
-```bash
-# Option 1: Export directly
+# Set environment variables
 export SLACK_BOT_TOKEN="xoxb-your-token"
 export CHANNEL_ID="C0XXXXXXXXX"
 export HELPDESK_BOT_ID="B0XXXXXXXXX"
 
-# Option 2: Use .env file with python-dotenv (add to requirements.txt if needed)
+# Run the bot
+python src/main.py
 ```
 
-### 4. Run the Bot
+---
 
-```bash
-python main.py
-```
-
-## 🔄 How It Works
+## 🏗️ Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -266,9 +203,7 @@ python main.py
 │                 ↓                                           │
 │  2. ⏰ Filters messages older than threshold                │
 │                 ↓                                           │
-│  3. 🔎 Checks each thread for:                             │
-│        • HelpDesk bot replies (category selected)          │
-│        • Previous reminders (already notified)             │
+│  3. 🔎 Checks each thread for HelpDesk bot replies         │
 │                 ↓                                           │
 │  4. 📨 Sends reminder to threads without category          │
 │                 ↓                                           │
@@ -279,62 +214,86 @@ python main.py
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Message Flow
+---
 
-1. User posts a message in the IT Service Desk channel
-2. Bot waits for the configured threshold (default: 3 hours)
-3. Bot checks if HelpDesk bot has replied (meaning category was selected)
-4. If no HelpDesk response, bot sends a friendly reminder in the thread
-5. User gets notified and can then select a category
+## 📁 Project Structure
 
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Bot not responding:**
-- Check if the bot is running: `docker-compose ps`
-- Verify logs for errors: `docker-compose logs -f`
-- Ensure environment variables are set correctly
-
-**"Missing required environment variables" error:**
-- Make sure `.env` file exists and contains all required variables
-- Check for typos in variable names
-
-**"channel_not_found" error:**
-- Verify the `CHANNEL_ID` is correct
-- Ensure the bot is invited to the channel
-
-**"not_in_channel" error:**
-- Invite the bot to the channel: `/invite @YourBotName`
-
-**Messages not being detected:**
-- Check `AGE_THRESHOLD_SECONDS` - messages must be older than this value
-- Verify the bot has `channels:history` permission
-
-### Logs
-
-```bash
-# Docker logs
-docker-compose logs -f
-
-# Filter for errors
-docker-compose logs -f 2>&1 | grep -i error
 ```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is for internal ITSD use.
+ITSD-Reminder/
+├── 📁 src/                    # Source code
+│   ├── __init__.py
+│   └── main.py                # Main bot logic
+├── 📁 config/                 # Configuration
+│   ├── .env.example           # Template (safe to commit)
+│   └── .env                   # Your secrets (gitignored)
+├── 📁 data/                   # Runtime data (gitignored)
+│   └── reminded_messages.json
+├── 🐳 Dockerfile              # Multi-arch Docker image
+├── 🐳 docker-compose.yml      # Docker orchestration
+├── 📋 requirements.txt        # Python dependencies
+├── 📜 LICENSE                 # MIT License
+├── 🤝 CONTRIBUTING.md         # Contribution guidelines
+├── 🔐 SECURITY.md             # Security policy
+└── 📖 README.md               # This file
+```
 
 ---
 
-Made with ❤️ by the ITSD Team
+## 🔧 Troubleshooting
+
+<details>
+<summary><strong>❌ Bot not responding</strong></summary>
+
+- Check if the bot is running: `docker compose ps`
+- Verify logs for errors: `docker compose logs -f`
+- Ensure environment variables are set correctly
+</details>
+
+<details>
+<summary><strong>❌ "channel_not_found" error</strong></summary>
+
+- Verify the `CHANNEL_ID` is correct
+- Ensure the bot is invited to the channel: `/invite @YourBotName`
+</details>
+
+<details>
+<summary><strong>❌ Messages not being detected</strong></summary>
+
+- Check `AGE_THRESHOLD_SECONDS` - messages must be older than this value
+- Verify the bot has `channels:history` permission
+</details>
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
+
+1. 🍴 Fork the repository
+2. 🌿 Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. 💾 Commit your changes (`git commit -m 'Add amazing feature'`)
+4. 📤 Push to the branch (`git push origin feature/amazing-feature`)
+5. 🔃 Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👤 Author
+
+<div align="center">
+
+**Davide Caputo**
+
+[![GitHub](https://img.shields.io/badge/GitHub-@CaputoDavide93-181717?style=flat-square&logo=github)](https://github.com/CaputoDavide93)
+[![Email](https://img.shields.io/badge/Email-CaputoDav@gmail.com-EA4335?style=flat-square&logo=gmail&logoColor=white)](mailto:CaputoDav@gmail.com)
+
+---
+
+<sub>Made with ❤️ for IT Service Desk teams</sub>
+
+</div>
