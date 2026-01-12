@@ -2,7 +2,25 @@
 
 A Slack bot that automatically reminds users to select a category for their IT Service Desk tickets when they forget to do so.
 
-## 📋 Table of Contents
+## � Project Structure
+
+```
+ITSD-Reminder/
+├── src/                    # Application source code
+│   ├── __init__.py
+│   └── main.py             # Main bot logic
+├── config/                 # Configuration files
+│   ├── .env.example        # Template (safe to commit)
+│   └── .env                # Your secrets (git-ignored)
+├── data/                   # Runtime data (git-ignored)
+│   └── reminded_messages.json
+├── Dockerfile              # Multi-arch Docker image
+├── docker-compose.yml      # Docker orchestration
+├── requirements.txt        # Python dependencies
+└── README.md               # This file
+```
+
+## �📋 Table of Contents
 
 - [Features](#-features)
 - [Prerequisites](#-prerequisites)
@@ -105,10 +123,10 @@ cd ITSD-Reminder
 
 ```bash
 # Copy the example configuration
-cp .env.example .env
+cp config/.env.example config/.env
 
 # Edit with your values
-nano .env  # or use your preferred editor
+nano config/.env  # or use your preferred editor
 ```
 
 ### 3. Run with Docker

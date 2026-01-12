@@ -13,9 +13,9 @@ services:
     container_name: itsd-reminder-bot
     restart: unless-stopped
     
-    # Load environment variables from .env file
+    # Load environment variables from config/.env file
     env_file:
-      - .env
+      - config/.env
     
     # Mount data directory for persistent storage
     volumes:

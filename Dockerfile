@@ -32,7 +32,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY --chown=appuser:appgroup main.py .
+COPY --chown=appuser:appgroup src/ ./src/
 
 # Switch to non-root user
 USER appuser
@@ -42,4 +42,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import slack_sdk; print('OK')" || exit 1
 
 # Run the application
-CMD ["python", "-u", "main.py"]
+CMD ["python", "-u", "src/main.py"]
