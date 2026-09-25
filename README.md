@@ -2,25 +2,21 @@
 
 # 🤖 ITSD Reminder Bot
 
-**Automated Slack bot for IT Service Desk ticket category reminders**
+**A Slack bot that reminds people to pick a category when they open an IT Service Desk ticket without one**
 
-A Slack bot that monitors your IT Service Desk channel and automatically reminds users to select a category for their tickets when they forget to do so.
-
-![Python](https://img.shields.io/badge/python-3.13-3776AB?logo=python&logoColor=white)
-![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)
-![Slack](https://img.shields.io/badge/Slack-integrated-4A154B?logo=slack&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-green)
-
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![Slack](https://img.shields.io/badge/Slack-Web%20API-4A154B?logo=slack&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 [![CI](https://github.com/CaputoDavide93/ITSD-Reminder/actions/workflows/ci.yml/badge.svg)](https://github.com/CaputoDavide93/ITSD-Reminder/actions/workflows/ci.yml)
+
+[Features](#-features) • [Architecture](#️-architecture) • [Quick Start](#-quick-start) • [Configuration](#️-configuration) • [Testing](#-testing) • [Contributing](#-contributing)
+
+</div>
 
 ---
 
-[Features](#-features) •
-[Quick Start](#-quick-start) •
-[Configuration](#️-configuration) •
-[Contributing](#-contributing)
-
-</div>
+The bot watches your IT Service Desk channel and, when someone opens a ticket and forgets to select a category, replies in the thread to remind them.
 
 > [!NOTE]
 > If you also run the **ITSD Classifier** with its built-in reminder enabled (`REMINDER_ENABLED=true`), don't run this bot as well — every thread would be reminded twice.
@@ -29,16 +25,34 @@ A Slack bot that monitors your IT Service Desk channel and automatically reminds
 
 ## ✨ Features
 
-| Feature | Description |
-|---------|-------------|
-| 🔍 **Automatic Monitoring** | Continuously monitors your Slack channel for new tickets |
-| ⏰ **Smart Timing** | Only reminds users after a configurable time threshold |
-| 🤖 **HelpDesk Integration** | Detects when HelpDesk bot has already processed a ticket |
-| 🔄 **Duplicate Prevention** | Skips threads our own bot already replied to (matched on bot user ID, so changing `REMINDER_MESSAGE` never breaks it) plus a JSON log of reminded threads |
-| 📜 **Full History** | Follows `conversations.history` pagination, so busy days beyond 200 messages are covered |
-| ❤️ **Real Health Check** | The loop touches a heartbeat file; the container is unhealthy if it goes stale |
-| 🐳 **Docker Ready** | Fully containerized with multi-architecture support (Intel & Apple Silicon) |
-| 🔒 **Secure** | Non-root user, hash-pinned dependencies, Debian security updates at build time, credentials via environment variables |
+| | Feature | What it does |
+|---|---|---|
+| 🔍 | Automatic Monitoring | Continuously monitors your Slack channel for new tickets |
+| ⏰ | Smart Timing | Only reminds users after a configurable time threshold |
+| 🤖 | HelpDesk Integration | Detects when HelpDesk bot has already processed a ticket |
+| 🔄 | Duplicate Prevention | Skips threads our own bot already replied to (matched on bot user ID, so changing `REMINDER_MESSAGE` never breaks it) plus a JSON log of reminded threads |
+| 📜 | Full History | Follows `conversations.history` pagination, so busy days beyond 200 messages are covered |
+| ❤️ | Real Health Check | The loop touches a heartbeat file; the container is unhealthy if it goes stale |
+| 🐳 | Docker Ready | Fully containerized with multi-architecture support (Intel & Apple Silicon) |
+| 🔒 | Secure | Non-root user, hash-pinned dependencies, Debian security updates at build time, credentials via environment variables |
+
+---
+
+## 🗺️ Architecture
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/architecture-dark.svg">
+  <img src="docs/assets/architecture-light.svg" width="100%"
+       alt="The reminder bot runs in one Docker container configured from .env. It reads the service desk channel and posts reminders through the Slack Web API, keeps a log of reminded threads on the ./data volume, and touches a heartbeat file that the Docker health check watches.">
+</picture>
+
+Each check, end to end:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/reminder-loop-dark.svg">
+  <img src="docs/assets/reminder-loop-light.svg" width="100%"
+       alt="Each check fetches today's channel messages, keeps top-level human messages older than the age threshold that are not yet logged, and asks whether the HelpDesk bot or this bot already replied. If not, it posts a reminder in the thread. Either way the thread is logged, then the bot sleeps until the next check.">
+</picture>
 
 ---
 
@@ -59,7 +73,7 @@ docker compose up -d
 
 ---
 
-## 📦 Prerequisites
+## 📋 Prerequisites
 
 ### For Docker Deployment (Recommended)
 
@@ -142,31 +156,9 @@ CHECK_INTERVAL_HOURS=2
 
 ---
 
-## 🐳 Docker Deployment
+## 📖 Usage
 
-### Multi-Architecture Support
-
-This image supports both Intel/AMD64 and Apple Silicon (ARM64).
-
-### Build and Run
-
-```bash
-# Build and start
-docker compose up -d
-
-# View logs
-docker compose logs -f
-
-# Stop the service
-docker compose down
-
-# Rebuild after code changes
-docker compose up -d --build
-```
-
----
-
-## 💻 Running Locally
+Run the bot outside Docker:
 
 ```bash
 # Create virtual environment
@@ -185,7 +177,37 @@ export HELPDESK_BOT_ID="B0XXXXXXXXX"
 python src/main.py
 ```
 
-### 🧪 Tests & lint
+---
+
+## 📁 Repo structure
+
+```text
+ITSD-Reminder/
+├── src/
+│   ├── __init__.py
+│   └── main.py              # 🧠 bot loop: fetch, filter, remind, log
+├── tests/
+│   ├── test_main.py         # 🧪 pytest suite (Slack mocked)
+│   └── test_diagrams.py     # 🖼️ committed SVGs match the generator
+├── tools/
+│   └── gen_diagram.py       # 🖌️ draws the README diagrams (stdlib only)
+├── docs/assets/             # 🗺️ diagram SVGs, light + dark
+├── .github/workflows/ci.yml # 🤖 ruff + pytest on push and PR
+├── .env.example             # ⚙️ template, copy to .env (gitignored)
+├── Dockerfile               # 🐳 multi-arch image, non-root user
+├── docker-compose.yml       # 🐳 service, ./data volume, health check
+├── requirements.txt         # 📦 direct dependencies
+├── requirements.lock.txt    # 🔒 hash-pinned lockfile (uv pip compile)
+├── .gitignore  .dockerignore
+├── README.md  CONTRIBUTING.md  SECURITY.md  # 📄 community files
+└── LICENSE                  # 📄 MIT
+```
+
+Runtime state (`data/reminded_messages.json`) is written to the gitignored `./data` volume.
+
+---
+
+## 🧪 Testing
 
 ```bash
 pip install pytest ruff
@@ -193,57 +215,35 @@ pytest -q tests      # Slack client is mocked
 ruff check src tests
 ```
 
-CI runs both on every push and pull request.
+CI ([ci.yml](.github/workflows/ci.yml)) runs both on every push and pull request. `tests/test_diagrams.py` also checks that the committed SVGs in `docs/assets/` match `tools/gen_diagram.py`; run `python3 tools/gen_diagram.py` after changing a diagram.
 
 ---
 
-## 🏗️ Architecture
+## 📦 Deployment
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/architecture-dark.svg">
-  <img src="docs/assets/architecture-light.svg" width="100%"
-       alt="The reminder bot runs in one Docker container configured from .env. It reads the service desk channel and posts reminders through the Slack Web API, keeps a log of reminded threads on the ./data volume, and touches a heartbeat file that the Docker health check watches.">
-</picture>
+### Multi-Architecture Support
 
-Each check, end to end:
+This image supports both Intel/AMD64 and Apple Silicon (ARM64).
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/reminder-loop-dark.svg">
-  <img src="docs/assets/reminder-loop-light.svg" width="100%"
-       alt="Each check fetches today's channel messages, keeps top-level human messages older than the age threshold that are not yet logged, and asks whether the HelpDesk bot or this bot already replied. If not, it posts a reminder in the thread. Either way the thread is logged, then the bot sleeps until the next check.">
-</picture>
+### Docker Compose
 
----
+```bash
+# Build and start
+docker compose up -d
 
-## 📁 Project Structure
+# View logs
+docker compose logs -f
 
-```
-ITSD-Reminder/
-├── 📁 src/                    # Source code
-│   ├── __init__.py
-│   └── main.py                # Main bot logic
-├── 📁 tests/                  # pytest suite (Slack mocked)
-│   ├── test_main.py
-│   └── test_diagrams.py       # README diagrams match the generator
-├── 📁 tools/
-│   └── gen_diagram.py         # Draws the README diagrams (stdlib only)
-├── 📁 docs/assets/            # Generated diagram SVGs, light + dark
-├── 📁 data/                   # Runtime data (gitignored)
-│   └── reminded_messages.json
-├── ⚙️ .env.example            # Template (safe to commit) — copy to .env (gitignored)
-├── 🐳 Dockerfile              # Multi-arch Docker image
-├── 🐳 docker-compose.yml      # Docker orchestration
-├── 📋 requirements.txt        # Direct dependencies
-├── 🔒 requirements.lock.txt   # Hash-pinned lockfile (uv pip compile)
-├── 📜 LICENSE                 # MIT License
-├── 🤝 CONTRIBUTING.md         # Contribution guidelines
-├── 🔐 SECURITY.md             # Security policy
-└── 📖 README.md               # This file
+# Stop the service
+docker compose down
+
+# Rebuild after code changes
+docker compose up -d --build
 ```
 
 ---
 
-## 🔧 Troubleshooting
+## 🛠️ Troubleshooting
 
 <details>
 <summary><strong>❌ Bot not responding</strong></summary>
@@ -266,6 +266,12 @@ ITSD-Reminder/
 - Check `AGE_THRESHOLD_SECONDS` - messages must be older than this value
 - Verify the bot has `channels:history` permission
 </details>
+
+---
+
+## 🔒 Security
+
+The bot token lives only in `.env`, which is gitignored. The container runs as a non-root user with hash-pinned dependencies. See [SECURITY.md](SECURITY.md) to report a vulnerability.
 
 ---
 
