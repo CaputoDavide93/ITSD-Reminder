@@ -50,8 +50,8 @@ git clone https://github.com/CaputoDavide93/ITSD-Reminder.git
 cd ITSD-Reminder
 
 # Configure environment
-cp config/.env.example config/.env
-nano config/.env  # Add your Slack credentials
+cp .env.example .env
+nano .env  # Add your Slack credentials
 
 # Run with Docker
 docker compose up -d
@@ -128,7 +128,7 @@ docker compose up -d
 ### Example Configuration
 
 ```bash
-# config/.env
+# .env
 SLACK_BOT_TOKEN=xoxb-your-token-here
 CHANNEL_ID=C0XXXXXXXXX
 HELPDESK_BOT_ID=B0XXXXXXXXX
@@ -202,7 +202,7 @@ CI runs both on every push and pull request.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/architecture-dark.svg">
   <img src="docs/assets/architecture-light.svg" width="100%"
-       alt="The reminder bot runs in one Docker container configured from config/.env. It reads the service desk channel and posts reminders through the Slack Web API, keeps a log of reminded threads on the ./data volume, and touches a heartbeat file that the Docker health check watches.">
+       alt="The reminder bot runs in one Docker container configured from .env. It reads the service desk channel and posts reminders through the Slack Web API, keeps a log of reminded threads on the ./data volume, and touches a heartbeat file that the Docker health check watches.">
 </picture>
 
 Each check, end to end:
@@ -228,11 +228,9 @@ ITSD-Reminder/
 ├── 📁 tools/
 │   └── gen_diagram.py         # Draws the README diagrams (stdlib only)
 ├── 📁 docs/assets/            # Generated diagram SVGs, light + dark
-├── 📁 config/                 # Configuration
-│   ├── .env.example           # Template (safe to commit)
-│   └── .env                   # Your secrets (gitignored)
 ├── 📁 data/                   # Runtime data (gitignored)
 │   └── reminded_messages.json
+├── ⚙️ .env.example            # Template (safe to commit) — copy to .env (gitignored)
 ├── 🐳 Dockerfile              # Multi-arch Docker image
 ├── 🐳 docker-compose.yml      # Docker orchestration
 ├── 📋 requirements.txt        # Direct dependencies

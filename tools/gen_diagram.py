@@ -182,7 +182,7 @@ class Canvas:
 def architecture(scheme):
     """One long-running container, one Slack channel, two small files."""
     k = Canvas(1180, 470, scheme,
-               "The reminder bot runs in one Docker container configured from config/.env. It "
+               "The reminder bot runs in one Docker container configured from .env. It "
                "reads the service desk channel and posts reminders through the Slack Web API, "
                "keeps a log of reminded threads on the ./data volume, and touches a heartbeat "
                "file that the Docker health check watches.")
@@ -202,7 +202,7 @@ def architecture(scheme):
               icon="heart"),
         k.box(xs[1], low, hb_w, LH, "Heartbeat file", ["Touched every 15 min"], icon="pulse"),
         k.box(xs[2], low, W, LH, "Reminded log", ["On the ./data volume,", "survives restarts"], icon="file"),
-        k.edge([(xs[0] + W + 8, mid), (xs[1] - 8, mid)], label="config/.env"),
+        k.edge([(xs[0] + W + 8, mid), (xs[1] - 8, mid)], label=".env"),
         k.edge([(xs[1] + W + 8, mid), (xs[2] - 8, mid)], both=True, label="history, replies"),
         k.text((xs[1] + W + xs[2]) / 2, mid + 21, "chat.postMessage", size=11.5, font=MONO,
                colour=c["chip"], anchor="middle"),
