@@ -43,7 +43,7 @@ The bot watches your IT Service Desk channel and, when someone opens a ticket an
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/architecture-dark.svg">
   <img src="docs/assets/architecture-light.svg" width="100%"
-       alt="The reminder bot runs in one Docker container configured from .env. It reads the service desk channel and posts reminders through the Slack Web API, keeps a log of reminded threads on the ./data volume, and touches a heartbeat file that the Docker health check watches.">
+       alt="The reminder bot runs in one Docker container configured from .env; it reads channel history and thread replies from Slack, posts reminders with chat.postMessage, keeps a log of handled threads on the ./data volume, and touches a heartbeat file that the Docker health check reads.">
 </picture>
 
 Each check, end to end:
@@ -192,7 +192,7 @@ ITSD-Reminder/
 ├── tools/
 │   └── gen_diagram.py       # 🖌️ draws the README diagrams (stdlib only)
 ├── docs/assets/             # 🗺️ diagram SVGs, light + dark
-├── .github/workflows/ci.yml # 🤖 ruff + pytest on push and PR
+├── .github/workflows/ci.yml # 🤖 ruff, pytest, diagram check
 ├── .env.example             # ⚙️ template, copy to .env (gitignored)
 ├── Dockerfile               # 🐳 multi-arch image, non-root user
 ├── docker-compose.yml       # 🐳 service, ./data volume, health check
@@ -215,7 +215,7 @@ pytest -q tests      # Slack client is mocked
 ruff check src tests
 ```
 
-CI ([ci.yml](.github/workflows/ci.yml)) runs both on every push and pull request. `tests/test_diagrams.py` also checks that the committed SVGs in `docs/assets/` match `tools/gen_diagram.py`; run `python3 tools/gen_diagram.py` after changing a diagram.
+CI ([ci.yml](.github/workflows/ci.yml)) runs both on every push and pull request. `tests/test_diagrams.py` also checks that the committed SVGs in `docs/assets/` match `tools/gen_diagram.py`; run `python3 tools/gen_diagram.py` after changing a diagram (CI also runs `python3 tools/gen_diagram.py --check`).
 
 ---
 
