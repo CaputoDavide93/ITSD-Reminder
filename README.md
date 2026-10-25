@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/brand/icon.svg" width="96" alt="ITSD Reminder icon: a ticket message with a reply hanging off it in a thread">
+<img src="docs/assets/brand/icon.svg" width="96" alt="ITSD Reminder icon: a white notification bell on a crimson rounded square">
 
 # 🤖 ITSD Reminder Bot
 
@@ -164,7 +164,8 @@ ITSD-Reminder/
 │   ├── test_main.py          # 🧪 pytest suite (Slack mocked)
 │   └── test_diagrams.py      # 🖼️ committed SVGs match the generator
 ├── tools/
-│   └── gen_diagram.py        # 🖌️ draws the diagrams (stdlib only)
+│   ├── gen_diagram.py        # 🖌️ draws the diagrams (stdlib only)
+│   └── brand/                # 🎨 icon and social preview generator, icon freshness check
 ├── docs/
 │   ├── README.md             # 🗺️ docs index
 │   ├── setup.md              # 🧭 Slack app, IDs, install
@@ -173,7 +174,7 @@ ITSD-Reminder/
 │   ├── faq.md                # ❓ short answers
 │   └── assets/               # 🖼️ diagrams, brand icon, social preview
 ├── .github/workflows/ci.yml  # 🤖 make check
-├── Makefile                  # 🔧 venv, lint, test, diagram, check
+├── Makefile                  # 🔧 venv, lint, test, diagram, check, social-preview
 ├── .env.example              # ⚙️ template, copy to .env (gitignored)
 ├── Dockerfile                # 🐳 multi-arch image, non-root user
 ├── docker-compose.yml        # 🐳 service, ./data volume, health check

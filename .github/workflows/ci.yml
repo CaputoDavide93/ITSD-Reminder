@@ -17,6 +17,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --require-hashes -r requirements.lock.txt
-          pip install ruff pytest
+          pip install ruff pytest pillow
       - name: Check (ruff, pytest, diagrams)
         run: make check PYTHON=python
