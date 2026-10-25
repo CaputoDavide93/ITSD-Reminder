@@ -1,0 +1,29 @@
+# ITSD Reminder
+
+> ITSD Reminder is a free, open-source (MIT) Slack bot that reminds people to pick a category on their IT Service Desk ticket. It watches one Slack channel. When a person's top-level message is older than a threshold (3 hours by default) and the HelpDesk bot has not replied in its thread, the bot replies in that thread with a reminder that mentions the author. It reminds each ticket once. It runs as one Docker container configured with environment variables.
+
+Key facts:
+
+- Signal used: a reply in the ticket's thread from the HelpDesk bot (matched on its bot_id, set as HELPDESK_BOT_ID) means the ticket was processed. The bot never reads ticket categories.
+- No duplicate reminders: it skips threads where its own bot user already replied, and keeps a JSON log of reminded threads. Changing the reminder text does not break this.
+- Scope: one channel (CHANNEL_ID), messages posted since 00:00 UTC today, checked every 2 hours by default (CHECK_INTERVAL_HOURS).
+- Settings: SLACK_BOT_TOKEN, CHANNEL_ID and HELPDESK_BOT_ID are required. AGE_THRESHOLD_SECONDS, CHECK_INTERVAL_HOURS, REMINDER_MESSAGE, REMINDER_LOG_FILE and HEARTBEAT_FILE are optional.
+- Slack permissions: channels:history and chat:write are the ones the code needs.
+- Health: the loop touches a heartbeat file and the container is unhealthy if the file is older than 30 minutes.
+- Security: non-root container user, hash-pinned dependencies, token only in environment variables.
+- Tested: Python 3.13 in CI (ruff, pytest with Slack mocked); Docker 29 on macOS on Apple Silicon (image builds, container reports healthy). Unverified: Linux hosts, private channels, Enterprise Grid, a run against a live workspace in this repository's checks.
+- Trade-off: needs a Slack app, a bot token and a container that stays running.
+
+## Install
+
+1. git clone https://github.com/CaputoDavide93/ITSD-Reminder.git && cd ITSD-Reminder
+2. cp .env.example .env, then set SLACK_BOT_TOKEN, CHANNEL_ID and HELPDESK_BOT_ID
+3. docker compose up -d
+
+## Docs
+
+- [README](https://github.com/CaputoDavide93/ITSD-Reminder/blob/main/README.md): why it exists, quick start, features, configuration
+- [Setup](https://github.com/CaputoDavide93/ITSD-Reminder/blob/main/docs/setup.md): Slack app, scopes, finding the IDs, install, checking it works
+- [How it works](https://github.com/CaputoDavide93/ITSD-Reminder/blob/main/docs/how-it-works.md): one check step by step, and what it does not cover
+- [Troubleshooting](https://github.com/CaputoDavide93/ITSD-Reminder/blob/main/docs/troubleshooting.md): symptoms and fixes
+- [FAQ](https://github.com/CaputoDavide93/ITSD-Reminder/blob/main/docs/faq.md): short answers
