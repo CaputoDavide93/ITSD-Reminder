@@ -3,10 +3,6 @@
 
 FROM python:3.13-slim-trixie
 
-# Set build arguments for multi-arch support
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
-
 # Labels for container metadata
 LABEL maintainer="ITSD Team"
 LABEL description="Slack Reminder Bot for ITSD HelpDesk"
