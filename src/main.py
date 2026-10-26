@@ -2,7 +2,7 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
@@ -80,13 +80,13 @@ def fetch_history(oldest):
 
 
 def get_today_start_unix():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     return today_start.timestamp()
 
 
 def get_cutoff_unix(seconds_ago=AGE_THRESHOLD_SECONDS):
-    return (datetime.now(timezone.utc) - timedelta(seconds=seconds_ago)).timestamp()
+    return (datetime.now(UTC) - timedelta(seconds=seconds_ago)).timestamp()
 
 
 def load_reminded_messages():

@@ -34,7 +34,7 @@ Please provide:
    git checkout -b feature/amazing-feature
    ```
 4. **Make your changes** following our coding standards
-5. **Test** your changes — run `pytest -q tests` (Slack is mocked) and, for behaviour changes, try the bot against a test Slack channel
+5. **Test** your changes: run `make check` (ruff, pytest with Slack mocked, and the diagram check) and, for behaviour changes, try the bot against a test Slack channel
 6. **Commit** with a clear message:
    ```bash
    git commit -m "feat: add amazing feature"
