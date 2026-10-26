@@ -173,7 +173,7 @@ ITSD-Reminder/
 │   ├── troubleshooting.md    # 🛠️ symptoms and fixes
 │   ├── faq.md                # ❓ short answers
 │   └── assets/               # 🖼️ diagrams, brand icon, social preview
-├── .github/workflows/ci.yml  # 🤖 make check
+├── .github/                  # 🤖 CI workflow (make check) and dependabot config
 ├── Makefile                  # 🔧 venv, lint, test, diagram, check, social-preview
 ├── .env.example              # ⚙️ template, copy to .env (gitignored)
 ├── Dockerfile                # 🐳 multi-arch image, non-root user
