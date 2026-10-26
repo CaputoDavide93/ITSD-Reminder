@@ -22,7 +22,7 @@
 
 People open a ticket in the Service Desk channel and forget to choose a category. Nothing routes the ticket until someone notices, and the IT team ends up asking the same person the same question in a thread.
 
-ITSD Reminder asks for you. It watches one Slack channel, and when a person's message is older than your threshold and the HelpDesk bot has not replied to it, the bot replies in that thread with a reminder. It reminds each ticket once.
+This bot asks for you. It watches one Slack channel. When a message is older than your threshold and the HelpDesk bot has not replied to it, the bot replies in that thread with a reminder, once per ticket.
 
 | | ITSD Reminder | Chasing by hand | A fixed-time announcement in the channel |
 |---|---|---|---|
@@ -31,7 +31,7 @@ ITSD Reminder asks for you. It watches one Slack channel, and when a person's me
 | Repeats itself on the same ticket | No: bot user ID check plus a JSON log of reminded threads | Easily | On every run |
 | Needs something running | One small container | No | No |
 
-The trade-off: it needs a Slack app, a bot token and a container that stays up. It also reads the HelpDesk bot's reply as the signal that a ticket was handled, so it fits setups where that bot answers every processed ticket.
+The trade-off: you need a Slack app, a bot token and a container that stays up. The bot also treats a HelpDesk bot reply as proof a ticket was handled, so it only suits setups where that bot answers every processed ticket.
 
 ---
 
@@ -89,7 +89,7 @@ Each check, end to end:
        alt="Each check fetches today's channel messages, keeps top-level human messages older than the age threshold that are not yet logged, and asks whether the HelpDesk bot or this bot already replied. If not, it posts a reminder in the thread. Either way the thread is logged, then the bot sleeps until the next check.">
 </picture>
 
-The details, including what the bot does not cover, are in [docs/how-it-works.md](docs/how-it-works.md).
+[docs/how-it-works.md](docs/how-it-works.md) has the details, including what the bot does not cover.
 
 ---
 
