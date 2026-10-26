@@ -181,7 +181,7 @@ ITSD-Reminder/
 ├── requirements.txt          # 📦 direct dependencies
 ├── requirements.lock.txt     # 🔒 hash-pinned lockfile
 ├── llms.txt                  # 🔎 plain-text project summary
-├── AGENTS.md  CLAUDE.md      # 🤝 notes for coding agents
+├── AGENTS.md                 # 🤝 notes for contributors and coding agents
 ├── README.md  CONTRIBUTING.md  SECURITY.md  LICENSE
 └── .gitignore  .dockerignore
 ```
