@@ -243,14 +243,14 @@ def architecture(scheme):
     k.add(
         k.box(xs[0], top, W, H, "Environment", [".env via env_file: Slack token,", "channel, HelpDesk bot ID"],
               icon="sliders"),
-        k.box(xs[1], top, W, H, "Reminder bot", ["Checks every 2 hours, reminds", "threads older than 3 hours"],
+        k.box(xs[1], top, W, H, "Reminder Bot", ["Checks every 2 hours, reminds", "threads older than 3 hours"],
               icon="chip", tone="accent"),
-        k.box(xs[2], top, W, H, "Slack channel", ["Service desk tickets and", "HelpDesk bot replies"], icon="chat"),
-        k.box(xs[0], low, W, H, "Docker health check", ["Every 60 s: unhealthy once the", "heartbeat is 30 min old"],
+        k.box(xs[2], top, W, H, "Slack Channel", ["Service desk tickets and", "HelpDesk bot replies"], icon="chat"),
+        k.box(xs[0], low, W, H, "Docker Health Check", ["Every 60 s: unhealthy once the", "heartbeat is 30 min old"],
               icon="heart"),
-        k.box(xs[1], low, W, H, "Heartbeat file", ["/tmp/itsd-reminder.heartbeat,", "touched every 15 min"],
+        k.box(xs[1], low, W, H, "Heartbeat File", ["/tmp/itsd-reminder.heartbeat,", "touched every 15 min"],
               icon="pulse"),
-        k.box(xs[2], low, W, H, "Reminded log", ["JSON on the ./data volume,", "survives restarts"], icon="file"),
+        k.box(xs[2], low, W, H, "Reminded Log", ["JSON on the ./data volume,", "survives restarts"], icon="file"),
         k.edge([(xs[0] + W + 8, mid), (xs[1] - 8, mid)], label=".env"),
         # Slack: read in, reminders out.
         k.edge([(xs[2] - 8, mid - 14), (xs[1] + W + 8, mid - 14)], label="history + replies"),
@@ -285,13 +285,13 @@ def reminder_loop(scheme):
     b4 = (736, 180)
     b5 = (958, 198)
     k.add(
-        k.box(b1[0], y, b1[1], H, "Fetch today's", ["channel messages,", "every page"], icon="search"),
-        k.box(b2[0], y, b2[1], H, "Filter messages", ["top-level, from a person,", "older than 3 h, not logged"],
+        k.box(b1[0], y, b1[1], H, "Fetch Today's", ["channel messages,", "every page"], icon="search"),
+        k.box(b2[0], y, b2[1], H, "Filter Messages", ["top-level, from a person,", "older than 3 h, not logged"],
               icon="filter"),
         k.diamond(dx, cy, dw, dh, ["HelpDesk bot or", "this bot replied?"]),
-        k.box(b4[0], y, b4[1], H, "Post a reminder", ["in the thread,", "mentioning the author"],
+        k.box(b4[0], y, b4[1], H, "Post a Reminder", ["in the thread,", "mentioning the author"],
               icon="send", tone="accent"),
-        k.box(b5[0], y, b5[1], H, "Log the thread", ["saved when the pass ends"], icon="file"),
+        k.box(b5[0], y, b5[1], H, "Log the Thread", ["saved when the pass ends"], icon="file"),
         k.edge([(b1[0] + b1[1] + 8, cy), (b2[0] - 8, cy)]),
         k.edge([(b2[0] + b2[1] + 8, cy), (dx - dw / 2 - 8, cy)]),
         k.edge([(dx + dw / 2 + 8, cy), (b4[0] - 8, cy)], label="no"),
@@ -304,7 +304,7 @@ def reminder_loop(scheme):
     sx, sw, sy, sh = 470, 240, 286, 76
     smid = sy + sh / 2
     k.add(
-        k.box(sx, sy, sw, sh, "Sleep 2 hours", ["touching the heartbeat"], icon="moon", tone="soft"),
+        k.box(sx, sy, sw, sh, "Sleep 2 Hours", ["touching the heartbeat"], icon="moon", tone="soft"),
         k.edge([(b5[0] + b5[1] / 2, y + H + 8), (b5[0] + b5[1] / 2, smid), (sx + sw + 8, smid)]),
         k.edge([(sx - 8, smid), (b1[0] + b1[1] / 2, smid), (b1[0] + b1[1] / 2, y + H + 8)]),
         k.text((b1[0] + b1[1] / 2 + sx) / 2, smid - 9, "CHECK_INTERVAL_HOURS", size=11.5, font=MONO,
