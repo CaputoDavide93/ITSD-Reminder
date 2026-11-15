@@ -1,7 +1,7 @@
 # Multi-architecture Dockerfile for ITSD Reminder Bot
 # Supports both AMD64 (Intel) and ARM64 (Apple Silicon M1/M2/M3)
 
-FROM python:3.13-slim-trixie
+FROM python:3.15-slim-trixie
 
 # Labels for container metadata
 LABEL maintainer="ITSD Team"
